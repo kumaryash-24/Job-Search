@@ -3,13 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 // --- REGISTER a new user ---
-export const register = async (req, res) => {
-  try {
-    const { fullname, email, phoneNumber, password, role } = req.body;
 
-    if (!fullname || !email || !phoneNumber || !password || !role) {
-      return res.status(400).json({ message: "All fields are required.", success: false });
-    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
