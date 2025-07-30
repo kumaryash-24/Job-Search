@@ -1,34 +1,58 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Container, Card, Form, Button, Row, Col, Toast } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginRequest, loginSuccess, loginFailure } from '../redux/authSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');
-  const [error, setError] = useState('');
+  // ---> CHANGE #1: We no longer need the role state here. The backend will determine it.
+  // const [role, setRole] = useState('student'); 
+  const { error } = useSelector(state => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
+    dispatch(loginRequest());
 
     try {
+      // ---> CHANGE #2: Remove role from the data sent to the backend.
       const res = await axios.post(
         'http://localhost:8000/api/v1/user/login',
-        { email, password, role },
+        { email, password }, // Role is no longer sent
         { withCredentials: true }
       );
 
       if (res.data.success) {
+        toast.success('Login Successful!'); 
+        dispatch(loginSuccess(res.data.user));
+        
+        // ---> CHANGE #3: Add navigation logic for the admin role.
         const userRole = res.data.user.role;
-        navigate(userRole === 'recruiter' ? '/recruit' : '/hello');
+        
+        setTimeout(() => {
+          if (userRole === 'admin') {
+            navigate('/admin/dashboard');
+          } else if (userRole === 'recruiter') {
+            navigate('/recruit');
+          } else {
+            navigate('/hello');
+          }
+        }, 1500); // 1.5-second delay to show the toast message
+
       } else {
-        setError(res.data.message);
+        toast.error(res.data.message || 'An unknown error occurred.');
+        dispatch(loginFailure(res.data.message));
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials.';
+      toast.error(errorMessage);
+      dispatch(loginFailure(errorMessage));
     }
   };
 
@@ -50,6 +74,19 @@ const Login = () => {
         overflowX: 'hidden',
       }}
     >
+     
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Container>
         <Row className="justify-content-center">
           <Col xs={12} sm={8} md={6}>
@@ -74,11 +111,11 @@ const Login = () => {
                   Login
                 </h3>
                 <Form onSubmit={handleLogin}>
-                  <Form.Label>Email</Form.Label>
                   <Form.Group controlId="formEmail" className="mb-3">
+                    <Form.Label>Email</Form.Label>
                     <Form.Control
                       type="email"
-                      placeholder="Email"
+                      placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -89,11 +126,11 @@ const Login = () => {
                     />
                   </Form.Group>
 
-                  <Form.Group controlId="formPassword" className="mb-3">
+                  <Form.Group controlId="formPassword" className="mb-4">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
                       type="password"
-                      placeholder="Password"
+                      placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -104,20 +141,7 @@ const Login = () => {
                     />
                   </Form.Group>
 
-                  <Form.Group controlId="formRole" className="mb-4">
-                    <Form.Label>Role</Form.Label>
-                    <Form.Select
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                      style={{
-                        borderRadius: '10px',
-                        boxShadow: 'inset 0 0 5px rgba(0,0,0,0.06)',
-                      }}
-                    >
-                      <option value="student">Student</option>
-                      <option value="recruiter">Recruiter</option>
-                    </Form.Select>
-                  </Form.Group>
+                  {/* ---> CHANGE #4: The role selection dropdown is now removed from the form. <--- */}
 
                   <div className="d-grid">
                     <Button

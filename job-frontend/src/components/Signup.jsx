@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerRequest, registerSuccess, registerFailure } from '../redux/authSlice';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -12,9 +17,10 @@ const Signup = () => {
   });
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [message, setMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { error } = useSelector(state => state.auth);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,14 +34,13 @@ const Signup = () => {
     } else {
       setProfilePhoto(null);
       setPreview(null);
-      setMessage('Please select a valid image file');
-      setIsSuccess(false);
+      toast.error('Please select a valid image file');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
+    dispatch(registerRequest());
 
     try {
       const formData = new FormData();
@@ -54,17 +59,20 @@ const Signup = () => {
       );
 
       if (res.data.success) {
-        setIsSuccess(true);
-        setMessage('Signup successful!');
+        toast.success('Signup successful! Redirecting to login...');
+        dispatch(registerSuccess());
         setTimeout(() => navigate('/login'), 2000);
       } else {
-        setIsSuccess(false);
-        setMessage(res.data.message);
+
+        toast.error(res.data.message || 'An unknown error occurred.');
+        dispatch(registerFailure(res.data.message));
       }
     } catch (err) {
       console.error('Signup error:', err);
-      setIsSuccess(false);
-      setMessage(err.response?.data?.message || 'Signup failed');
+      
+      const errorMessage = err.response?.data?.message || 'Signup failed. Please check your details.';
+      toast.error(errorMessage);
+      dispatch(registerFailure(errorMessage));
     }
   };
 
@@ -80,7 +88,21 @@ const Signup = () => {
         flexDirection: 'column',
       }}
     >
-      {/* Navbar */}
+      
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+   
       <nav
         style={{
           width: '100%',
@@ -102,7 +124,7 @@ const Signup = () => {
         </ul>
       </nav>
 
-      {/* Full-Screen Form Centering */}
+   
       <div
         style={{
           flex: 1,
@@ -195,15 +217,12 @@ const Signup = () => {
               Sign Up
             </button>
           </form>
-          {message && (
-            <div
-              className={`mt-3 text-center fw-semibold ${
-                isSuccess ? 'text-success' : 'text-danger'
-              }`}
-            >
-              {message}
-            </div>
-          )}
+         
+           {error && (
+                  <p className="text-danger text-center mt-3 fw-semibold">
+                    {error}
+                  </p>
+                )}
         </div>
       </div>
     </div>

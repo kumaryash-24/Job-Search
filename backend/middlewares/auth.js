@@ -1,60 +1,41 @@
-// import jwt from "jsonwebtoken";
-
-// export const isAuthenticated = (req, res, next) => {
-//   const token = req.cookies?.token;
-//   if (!token) {
-//     return res.status(401).json({ success: false, message: "Unauthorized" });
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-//     req.id = decoded.userId;
-//     next();
-//   } catch (err) {
-//     console.error("Token verification error:", err.message);
-//     return res.status(401).json({ success: false, message: "Invalid or expired token" });
-//   }
-// };
-
-
-
-
-
-
 import jwt from "jsonwebtoken";
+import { User } from "../models/user.model.js";
 
-export const isAuthenticated = (req, res, next) => {
-  const token = req.cookies?.token;
-  if (!token) {
-    console.log("No token found");
-    return res.status(401).json({ success: false, message: "Unauthorized" });
-  }
+// This is the new, unified authentication middleware for your entire app.
+export const isAuthenticated = async (req, res, next) => {
+    try {
+        const token = req.cookies?.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. Please log in." });
+        }
 
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.id = decoded.userId;
-    next();
-  } catch (err) {
-    console.error("Token verification error:", err.message);
-    return res.status(401).json({ success: false, message: "Invalid or expired token" });
-  }
+        // Use SECRET_KEY, as this is what your login controller uses to sign the token.
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        if (!decoded) {
+            return res.status(401).json({ success: false, message: "Invalid token." });
+        }
+
+        // Find the user and attach the full user object (without password) to the request.
+        req.user = await User.findById(decoded.userId).select("-password");
+        if (!req.user) {
+            return res.status(404).json({ success: false, message: "User not found." });
+        }
+
+        next(); // Proceed to the next middleware or controller
+    } catch (error) {
+        console.error("Authentication Error:", error.message);
+        return res.status(401).json({ success: false, message: "Authentication failed." });
+    }
 };
 
-
-export const protect = async (req, res, next) => {
-  let token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Not authorized" });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id); // 🔁 Here is the fix
-
-    if (!user) throw new Error("User not found");
-
-    req.user = user;
-    next();
-  } catch (err) {
-    console.error("Auth Error:", err);
-    return res.status(401).json({ message: "Token failed" });
-  }
+// This middleware for checking admin role remains the same.
+export const isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        next();
+    } else {
+        return res.status(403).json({
+            success: false,
+            message: "Forbidden: Admin access required."
+        });
+    }
 };

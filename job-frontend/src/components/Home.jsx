@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react'; 
 import { Container, Row, Col, Button, Form, Carousel } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
 
   const topCompanies = [
     { name: 'Microsoft', logo: 'https://logo.clearbit.com/microsoft.com' },
@@ -67,16 +66,8 @@ const Home = () => {
 
   const groupedTestimonials = chunkTestimonials(testimonials, 2);
 
-  const darkStyle = {
-    backgroundColor: darkMode ? '#121212' : '#f8f9fa',
-    color: darkMode ? '#f1f1f1' : '#212529',
-    transition: '0.3s ease'
-  };
-
   return (
-    <div style={darkStyle} className="min-vh-100 w-100">
-
-  
+    <div style={{ backgroundColor: '#f8f9fa', color: '#212529' }} className="min-vh-100 w-100">
       <Carousel fade controls={false} indicators={false} interval={500}>
         {headerImages.map((img, index) => (
           <Carousel.Item key={index}>
@@ -100,11 +91,11 @@ const Home = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6 }}
                       style={{
-                        backgroundColor: darkMode ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.95)',
+                        backgroundColor: 'rgba(255,255,255,0.95)',
                         padding: '40px',
                         borderRadius: '16px',
                         textAlign: 'center',
-                        color: darkMode ? '#fff' : '#000',
+                        color: '#000',
                         boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
                       }}
                     >
@@ -177,7 +168,6 @@ const Home = () => {
         ))}
       </Carousel>
 
-      {/* Top Hiring Companies */}
       <Container fluid className="pt-4 pb-5">
         <h3 className="text-center text-primary mb-4">Top Hiring Companies</h3>
         <Row className="justify-content-center">
@@ -206,7 +196,6 @@ const Home = () => {
         </Row>
       </Container>
 
-      {/* Testimonials */}
       <Container className="mb-5">
         <h3 className="text-center text-primary mb-4">What People Say</h3>
         <Carousel
@@ -228,10 +217,10 @@ const Home = () => {
                       viewport={{ once: true }}
                       className="p-4 text-center h-100"
                       style={{
-                        backgroundColor: darkMode ? '#1e1e1e' : '#fff',
+                        backgroundColor: '#fff',
                         borderRadius: '12px',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                        color: darkMode ? '#fff' : '#000'
+                        color: '#000'
                       }}
                     >
                       <img
@@ -259,12 +248,11 @@ const Home = () => {
         </Carousel>
       </Container>
 
-      {/* Footer */}
       <footer className="bg-dark text-light py-4 w-100">
         <Container>
           <Row className="gy-3">
             <Col md={4}>
-              <h5>Job Portal</h5>
+              <h5>Career's Rise</h5>
               <p>Your trusted destination for top talent and opportunity.</p>
             </Col>
             <Col md={4}>
@@ -279,12 +267,12 @@ const Home = () => {
               <h6>Contact</h6>
               <p>Email: support@careerrise.com</p>
               <p>Phone: +91-98765-43210</p>
-              <p>LinkedIn: <a href="https://linkedin.com/company/jobportal" className="text-light">jobportal</a></p>
-              <p>Twitter: <a href="https://twitter.com/jobportal" className="text-light">@jobportal</a></p>
+              <p>LinkedIn: <a href="https://linkedin.com/company/jobportal" className="text-light">careerrise</a></p>
+              <p>Twitter: <a href="https://twitter.com/jobportal" className="text-light">careerrise</a></p>
             </Col>
           </Row>
           <hr className="border-light mt-3" />
-          <p className="text-center mb-0">&copy; {new Date().getFullYear()} Job Portal. All rights reserved.</p>
+          <p className="text-center mb-0">&copy; {new Date().getFullYear()} Career's Rise. All rights reserved.</p>
         </Container>
       </footer>
     </div>

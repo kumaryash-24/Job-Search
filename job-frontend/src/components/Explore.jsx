@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { setJobs } from '../redux/jobSlice';
 
 const Explore = () => {
-  const [jobs, setJobs] = useState([]);
+  const { jobs } = useSelector(state => state.job);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [filters, setFilters] = useState({ title: '', location: '' });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const dummyJobs = [
     {
@@ -16,7 +19,7 @@ const Explore = () => {
       description: 'React-based UI development',
       location: 'Bengaluru',
       salary: 60000,
-      postedBy: { fullname: 'Demo Recruiter' },
+      postedBy: { fullname: 'Demo' },
     },
     {
       _id: 'd2',
@@ -24,7 +27,7 @@ const Explore = () => {
       description: 'Node.js API and database integration',
       location: 'Delhi',
       salary: 70000,
-      postedBy: { fullname: 'Demo Recruiter' },
+      postedBy: { fullname: 'Demo' },
     },
     {
       _id: 'd3',
@@ -32,7 +35,7 @@ const Explore = () => {
       description: 'Figma & Adobe design systems',
       location: 'Mumbai',
       salary: 55000,
-      postedBy: { fullname: 'Demo Recruiter' },
+      postedBy: { fullname: 'Demo' },
     },
     {
       _id: 'd4',
@@ -40,7 +43,7 @@ const Explore = () => {
       description: 'Analyze business trends with SQL',
       location: 'Remote',
       salary: 65000,
-      postedBy: { fullname: 'Demo Recruiter' },
+      postedBy: { fullname: 'Demo' },
     },
     {
       _id: 'd5',
@@ -48,7 +51,7 @@ const Explore = () => {
       description: 'Oversee teams and deliverables',
       location: 'Hyderabad',
       salary: 90000,
-      postedBy: { fullname: 'Demo Recruiter' },
+      postedBy: { fullname: 'Demo' },
     },
   ];
 
@@ -58,17 +61,21 @@ const Explore = () => {
         const res = await axios.get('http://localhost:8000/api/v1/jobs');
         const realJobs = res.data.success ? res.data.jobs : [];
         const allJobs = [...dummyJobs, ...realJobs];
-        setJobs(allJobs);
+        dispatch(setJobs(allJobs));
         setFilteredJobs(allJobs);
       } catch (err) {
         console.error('Failed to load jobs:', err);
-        setJobs(dummyJobs);
+        dispatch(setJobs(dummyJobs));
         setFilteredJobs(dummyJobs);
       }
     };
 
     fetchJobs();
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredJobs(jobs);
+  }, [jobs]);
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -112,7 +119,7 @@ const Explore = () => {
           Explore Jobs 🔍
         </h2>
         <Row>
-          {/* Sidebar Filter */}
+        
           <Col md={3}>
             <div
               className="p-4 shadow"
@@ -160,7 +167,7 @@ const Explore = () => {
             </div>
           </Col>
 
-          {/* Jobs Grid */}
+         
           <Col md={9}>
             {filteredJobs.length === 0 ? (
               <p className="text-center text-muted mt-4">No matching jobs found.</p>
