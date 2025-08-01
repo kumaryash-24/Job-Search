@@ -69,7 +69,7 @@ Let’s build a better future together!
 Made with ❤️ by Kumar Yash
 📩 Email: kumaryash24042002@gmail.com
 
-“Opportunities don't happen. You create them. Career's Rise helps you do just that.”
+“Opportunities don't happen. You create them. Job Portal helps you do just that.”
 
  Job Portal – Bringing Talent and Opportunity
 Built with 💻, ☕, and ❤️ for developers, job seekers, and recruiters.
