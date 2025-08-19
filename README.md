@@ -3,7 +3,7 @@
 
 Job Portal is a full-featured MERN Stack Job Portal designed to seamlessly connect job seekers and recruiters. From authentication to job management, resume uploads to personalized dashboards, it empowers talent and bridges opportunity.
 
-🔥 Features                        
+🔥 Features                                    
                    
 ✨ Everything you need in one place:                
                              
