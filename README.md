@@ -5,7 +5,7 @@ Job Portal is a full-featured MERN Stack Job Portal designed to seamlessly conne
 
 🔥 Features                                    
                    
-✨ Everything you need in one place:                
+✨ Everything you need in one place:                                   
                              
 👨‍💼 Recruiter & Job Seeker Signup/Login
 
