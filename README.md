@@ -73,3 +73,6 @@ Made with ❤️ by Kumar Yash
 
  Job Portal – Bringing Talent and Opportunity
 Built with 💻, ☕, and ❤️ for developers, job seekers, and recruiters.
+
+
+_Last updated: 2026-08-20_
