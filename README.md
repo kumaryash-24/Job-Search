@@ -78,3 +78,4 @@ Built with 💻, ☕, and ❤️ for developers, job seekers, and recruiters.
 _Last updated: 2026-08-20_
 
 <!-- Last updated: 2026-08-27 -->
+<!-- Last updated: 2026-08-29 -->
