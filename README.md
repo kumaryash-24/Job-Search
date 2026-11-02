@@ -1,4 +1,6 @@
 🚀 Job Portal – Bridging Talent and Opportunity
+
+Updated on 2026-11-02.
 <p align="center"> <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2o2NnI0eDBnZHg1NzNmY2syd3Z2ZXRyYXZwNmVjajZkd2Vob2R5OCZlcD12MV8yX3Nk/gig3m5t9jGHU6/giphy.gif" alt="Career GIF" width="500"/> </p>
 
 Job Portal is a full-featured MERN Stack Job Portal designed to seamlessly connect job seekers and recruiters. From authentication to job management, resume uploads to personalized dashboards, it empowers talent and bridges opportunity.
