@@ -10,7 +10,7 @@ Job Portal is a full-featured MERN Stack Job Portal designed to seamlessly conne
 ✨ Everything you need in one place:                                              
                              
 👨‍💼 Recruiter & Job Seeker Signup/Login                
-
+    
 📄 Resume & Profile Picture Upload via Cloudinary
 
 📝 Post, Edit, and Delete Jobs (Recruiters)
